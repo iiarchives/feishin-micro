@@ -18,6 +18,7 @@ const launch_app = () => {
             preload: join(import.meta.dirname, "preload.js")
         }
     });
+    window.setResizable(false);
     window.setSkipTaskbar(true);
     window.setAlwaysOnTop(true, "screen");
     window.loadFile(join(import.meta.dirname, "src/index.html"));

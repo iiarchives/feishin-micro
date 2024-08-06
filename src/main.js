@@ -51,7 +51,10 @@ function update_toggle_status(status) {
         }
     `;
     cache.status = status;
-    visualizer.audio[status === "paused" ? "pause" : "play"]();
+
+    const audio = visualizer.audio;
+    if (!audio.src) return;
+    if ((!audio.paused && status === "paused") || (audio.paused && status === "playing")) audio[status === "paused" ? "pause" : "play"]();
 }
 
 // Establish connection
