@@ -1,4 +1,5 @@
 // Copyright (c) 2024 iiPython
+// Not my best work, but it sure as hell gets the job done.
 
 // Initialization
 const elements = {
@@ -57,57 +58,87 @@ function update_toggle_status(status) {
     if ((!audio.paused && status === "paused") || (audio.paused && status === "playing")) audio[status === "paused" ? "pause" : "play"]();
 }
 
+function set_text(title, description, error) {
+    if (error) {
+        elements.cover.src = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+        elements.bgimage.style.background = "#002D62";
+        document.querySelector(".progress-bar > div").style.width = "0%";
+        update_toggle_status("paused");
+    }
+    elements.name.innerText = title;
+    elements.combo.innerText = description;
+    if (!cache.last || (description !== `${cache.last.artistName} · ${cache.last.album}`)) {
+        elements.combo.style.paddingLeft = "", elements.combo.style.animation = "";
+        setTimeout(() => {
+            if (elements.combo.offsetWidth >= 290) {
+                elements.combo.style.paddingLeft = "100%";
+                elements.combo.style.animation = "marquee 15s linear infinite";
+            }
+        }, 10);
+    }
+}
+
+// Message handling
+function handle_message(d) {
+    const raw = JSON.parse(d.data);
+    switch (raw.event) {
+        case "playback":
+            update_toggle_status(raw.data);
+            break;
+
+        case "position":
+            const duration = cache.last.duration / 1000;
+            visualizer.audio.currentTime = raw.data;
+            cache.time = raw.data;
+            document.querySelector(".progress-bar > div").style.width = `${(raw.data / duration) * 100}%`;
+            break;
+
+        case "state":
+        case "song":
+            if (raw.data.status) update_toggle_status(raw.data.status);
+
+            const song = raw.data.song ? raw.data.song : raw.data;
+            if (!song.name) return set_text("Nothing Playing", "Start playing a song in Feishin to have this update.", true);
+
+            // Handle visualizer
+            visualizer.audio.src = song.streamUrl;
+            if (cache.status === "playing") visualizer.audio.play();
+
+            // Handle images
+            elements.cover.src = song.imageUrl;
+            elements.bgimage.style.background = "";
+            elements.bgimage.style.backgroundImage = `url("${song.imageUrl}")`;
+
+            // Final updates
+            set_text(song.name, `${song.artistName} · ${song.album}`);
+            cache.last = song;
+    }
+}
+
 // Establish connection
-const socket = new WebSocket("ws://localhost:4333");
-socket.addEventListener("open", async () => {
-    socket.addEventListener("message", (d) => {
-        const raw = JSON.parse(d.data);
-        switch (raw.event) {
-            case "playback":
-                update_toggle_status(raw.data);
-                break;
-
-            case "position":
-                const duration = cache.last.duration / 1000;
-                visualizer.audio.currentTime = raw.data;
-                cache.time = raw.data;
-                document.querySelector(".progress-bar > div").style.width = `${(raw.data / duration) * 100}%`;
-                break;
-
-            case "state":
-            case "song":
-                if (raw.data.status) update_toggle_status(raw.data.status);
-
-                const song = raw.data.song ? raw.data.song : raw.data;
-                cache.last = song;
-
-                // Handle visualizer
-                visualizer.audio.src = song.streamUrl;
-                if (cache.status === "playing") visualizer.audio.play();
-
-                // Handle images
-                elements.cover.src = song.imageUrl;
-                elements.bgimage.style.backgroundImage = `url("${song.imageUrl}")`;
-
-                // Handle text
-                elements.name.innerText = song.name;
-                elements.combo.innerText = `${song.artistName} · ${song.album}`;
-
-                // Check length for scrolling
-                elements.combo.style.paddingLeft = "", elements.combo.style.animation = "";
-                if (elements.combo.offsetWidth >= 290) {
-                    elements.combo.style.paddingLeft = "100%";
-                    elements.combo.style.animation = "marquee 15s linear infinite";
-                }
-        }
+var socket, timeout;
+function establish_connection() {
+    socket = new WebSocket("ws://localhost:4333");
+    socket.addEventListener("open", async () => {
+        if (timeout) clearTimeout(timeout);
+        console.log("Connection established!");
+        socket.addEventListener("message", handle_message);
+        socket.send(JSON.stringify({
+            event: "authenticate",
+            header: `Basic ${btoa(`${await api.getStoreValue("user")}:${await api.getStoreValue("pass")}`)}`
+        }));
     });
-    socket.send(JSON.stringify({
-        event: "authenticate",
-        header: `Basic ${btoa(`${await api.getStoreValue("user")}:${await api.getStoreValue("pass")}`)}`
-    }));
-});
-socket.addEventListener("close", () => console.warn("Connection closed"));
-socket.addEventListener("error", (e) => console.error(e));
+    socket.addEventListener("close", () => {
+        set_text("Disconnected", "Reopen Feishin in order to proceed.", true);
+        timeout = setTimeout(establish_connection, 5000);
+    });
+    socket.addEventListener("error", (error) => {
+        console.error(error)
+        set_text("Socket Error", "Check console for more details.", true);
+        timeout = setTimeout(establish_connection, 5000);
+    });
+}
+establish_connection();
 
 // Handle buttons
 elements.prev.addEventListener("click", () => socket.send(JSON.stringify({ event: "previous" })));
