@@ -1,0 +1,25 @@
+{
+    "name": "feishin-micro",
+    "module": "index.js",
+    "type": "module",
+    "description": "Simple popout player widget for Feishin.",
+    "version": "0.1.0",
+    "author": "iiPython",
+    "devDependencies": {
+        "@types/bun": "latest",
+        "electron": "^31.3.1",
+        "electron-builder": "^24.13.3"
+    },
+    "dependencies": {
+        "electron-store": "^10.0.0"
+    },
+    "scripts": {
+        "start": "bun run -b electron .",
+        "build": "bun run -b electron-builder"
+    },
+    "build": {
+        "appId": "dev.iipython.ficro",
+        "productName": "Feishin Micro"
+    },
+    "postinstall": "bun run -b electron-builder install-app-deps"
+}

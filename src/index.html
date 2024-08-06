@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang = "en">
+    <head>
+        <meta charset = "utf-8">
+        <!-- CSS -->
+        <link rel = "stylesheet" href = "style.css">
+        <title>Feishin Micro</title>
+    </head>
+    <body>
+        <main>
+            <div id = "background-image"></div>
+            <div id = "visualizer"></div>
+            <div class = "flow">
+                <img id = "cover">
+                <div class = "data">
+                    <h3 class = "autocolor"></h3>
+                    <div id = "marquee"><h4 class = "autocolor"></h4></div>
+                    <div class = "buttons">
+                        <button id = "btn-prev">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" class="autocolor" viewBox="0 0 16 16">
+                                <path d="M4 4a.5.5 0 0 1 1 0v3.248l6.267-3.636c.54-.313 1.232.066 1.232.696v7.384c0 .63-.692 1.01-1.232.697L5 8.753V12a.5.5 0 0 1-1 0z"/>
+                            </svg>
+                        </button>
+                        <button id = "btn-toggle">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" class="autocolor" viewBox="0 0 16 16">
+                                <path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5m5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5"/>
+                            </svg>
+                        </button>
+                        <button id = "btn-next">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" class="autocolor" viewBox="0 0 16 16">
+                                <path d="M12.5 4a.5.5 0 0 0-1 0v3.248L5.233 3.612C4.693 3.3 4 3.678 4 4.308v7.384c0 .63.692 1.01 1.233.697L11.5 8.753V12a.5.5 0 0 0 1 0z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class = "progress-bar autocolor"><div class = "autocolor"></div></div>
+                </div>
+            </div>
+        </main>
+
+        <!-- JS -->
+        <script src = "libs/audiomotion.js"></script>
+        <script src = "libs/brightness.js"></script>
+        <script src = "main.js"></script>
+    </body>
+</html>
