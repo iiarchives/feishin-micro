@@ -21,6 +21,7 @@ const launch_app = () => {
     window.setSkipTaskbar(true);
     window.setAlwaysOnTop(true, "screen");
     window.loadFile(join(import.meta.dirname, "src/index.html"));
+    window.webContents.setAudioMuted(true);
 }
 
 app.whenReady().then(() => {
