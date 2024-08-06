@@ -105,7 +105,7 @@ function handle_message(d) {
             if (cache.status === "playing") visualizer.audio.play();
 
             // Handle images
-            elements.cover.src = song.imageUrl;
+            elements.cover.src = `${song.imageUrl}`.replace("&size=100", "&size=300");
             elements.bgimage.style.background = "";
             elements.bgimage.style.backgroundImage = `url("${song.imageUrl}")`;
 
