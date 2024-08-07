@@ -3,7 +3,7 @@
     --color-light-primary: #fefefe;
     --color-light-secondary: #d1d1d1;
     --color-dark-primary: #121212;
-    --color-dark-secondary: #575757;
+    --color-dark-secondary: #414141;
 }
 
 /* Fonts */
@@ -95,6 +95,11 @@ div.progress-bar.dark {
 div.progress-bar > div.dark {
     background-color: var(--color-light-secondary);
 }
+.dark:not(.progress-bar):hover {
+    fill: var(--color-light-secondary);
+    color: var(--color-light-secondary);
+}
+
 .light {
     fill: var(--color-dark-primary);
     color: var(--color-dark-primary); 
@@ -112,10 +117,6 @@ div.progress-bar > div.light {
 .light:not(.progress-bar):hover {
     fill: var(--color-dark-secondary);
     color: var(--color-dark-secondary);
-}
-.dark:not(.progress-bar):hover {
-    fill: var(--color-light-secondary);
-    color: var(--color-light-secondary);
 }
 
 /* ID matches */

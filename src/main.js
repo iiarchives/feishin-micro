@@ -116,19 +116,27 @@ function handle_message(d) {
 }
 
 // Establish connection
-var socket, timeout;
+var socket, timeout, missing_config;
 function establish_connection() {
     socket = new WebSocket("ws://localhost:4333");
     socket.addEventListener("open", async () => {
         if (timeout) clearTimeout(timeout);
         console.log("Connection established!");
         socket.addEventListener("message", handle_message);
+
+        // Send login payload
+        const username = await api.getStoreValue("user"), password = await api.getStoreValue("pass");
+        if (!(username && password)) {
+            missing_config = true;
+            return set_text("Config Required", "Place user credentials inside ~/.config/feishin-micro/config.json and relaunch.", true);
+        }
         socket.send(JSON.stringify({
             event: "authenticate",
-            header: `Basic ${btoa(`${await api.getStoreValue("user")}:${await api.getStoreValue("pass")}`)}`
+            header: `Basic ${btoa(`${username}:${password}`)}`
         }));
     });
     socket.addEventListener("close", () => {
+        if (missing_config) return;
         set_text("Disconnected", "Reopen Feishin in order to proceed.", true);
         timeout = setTimeout(establish_connection, 5000);
     });
