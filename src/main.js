@@ -101,7 +101,7 @@ function handle_message(d) {
             if (!song.name) return set_text("Nothing Playing", "Start playing a song in Feishin to have this update.", true);
 
             // Handle visualizer
-            visualizer.audio.src = song.streamUrl;
+            visualizer.audio.src = `${song.streamUrl}&maxBitRate=128`;
             if (cache.status === "playing") visualizer.audio.play();
 
             // Handle images
