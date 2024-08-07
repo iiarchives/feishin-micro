@@ -128,6 +128,8 @@ function establish_connection() {
         const username = await api.getStoreValue("user"), password = await api.getStoreValue("pass");
         if (!(username && password)) {
             missing_config = true;
+            await api.setStoreValue("user", "feishin");
+            await api.setStoreValue("pass", "changeme");
             return set_text("Config Required", "Place user credentials inside ~/.config/feishin-micro/config.json and relaunch.", true);
         }
         socket.send(JSON.stringify({

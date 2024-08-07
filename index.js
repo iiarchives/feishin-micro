@@ -27,6 +27,7 @@ const launch_app = () => {
 
 app.whenReady().then(() => {
     ipcMain.handle("get-value", (_, key) => store.get(key));
+    ipcMain.handle("set-value", (_, key, value) => store.set(key, value));
     launch_app();
 });
 app.on("window-all-closed", app.quit);
