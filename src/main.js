@@ -58,6 +58,19 @@ function update_toggle_status(status) {
     if ((!audio.paused && status === "paused") || (audio.paused && status === "playing")) audio[status === "paused" ? "pause" : "play"]();
 }
 
+function set_scroll(element, text, update) {
+    element.innerText = text;
+    if (update) {
+        element.style.paddingLeft = "", element.style.animation = "";
+        setTimeout(() => {
+            if (element.offsetWidth >= (element === elements.combo ? 290 : 282)) {
+                element.style.paddingLeft = "100%";
+                element.style.animation = "marquee 15s linear infinite";
+            }
+        }, 10);
+    }
+}
+
 function set_text(title, description, error) {
     if (error) {
         elements.cover.src = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
@@ -65,17 +78,8 @@ function set_text(title, description, error) {
         document.querySelector(".progress-bar > div").style.width = "0%";
         update_toggle_status("paused");
     }
-    elements.name.innerText = title;
-    elements.combo.innerText = description;
-    if (!cache.last || (description !== `${cache.last.artistName} · ${cache.last.album}`)) {
-        elements.combo.style.paddingLeft = "", elements.combo.style.animation = "";
-        setTimeout(() => {
-            if (elements.combo.offsetWidth >= 290) {
-                elements.combo.style.paddingLeft = "100%";
-                elements.combo.style.animation = "marquee 15s linear infinite";
-            }
-        }, 10);
-    }
+    set_scroll(elements.name, title, !cache.last || (title !== cache.last.name));
+    set_scroll(elements.combo, description, !cache.last || (description !== `${cache.last.artistName} · ${cache.last.album}`));
 }
 
 // Message handling
