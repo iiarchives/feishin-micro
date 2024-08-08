@@ -10,6 +10,7 @@ const elements = {
     prev:     document.querySelector("#btn-prev"),
     next:     document.querySelector("#btn-next"),
     toggle:   document.querySelector("#btn-toggle"),
+    metadata: document.querySelector("#metadata-label"),
 };
 const cache = {
     status:    null,  // Current playback status
@@ -73,7 +74,7 @@ function set_scroll(element, text, update) {
 }
 
 function formatMS(msValue) {
-    return new Date(msValue).toISOString().slice(14, -5)
+    return new Date(msValue).toISOString().slice(14, -5);
 }
 
 function set_text(title, description, error) {
@@ -100,8 +101,8 @@ function handle_message(d) {
             visualizer.audio.currentTime = raw.data;
             cache.time = raw.data;
             document.querySelector(".progress-bar > div").style.width = `${(raw.data / duration) * 100}%`;
-            document.getElementById("metadata-label").innerText = cache.metadata.replace("0:00", formatMS(cache.time * 1000))
-            
+            elements.metadata.innerText = cache.metadata.replace("0:00", formatMS(cache.time * 1000));
+
             break;
 
         case "state":
@@ -121,8 +122,8 @@ function handle_message(d) {
             elements.bgimage.style.backgroundImage = `url("${song.imageUrl}")`;
 
             // Meta info
-            document.getElementById("metadata-label").innerText = `YEAR ${song.releaseYear} · ${(song.container).toUpperCase()} ${Math.round(song.bitRate / 100) * 100} · 0:00/${formatMS(song.duration)}`
-            cache.metadata = document.getElementById("metadata-label").innerText
+            elements.metadata.innerText = `YEAR ${song.releaseYear} · ${(song.container).toUpperCase()} ${Math.round(song.bitRate / 100) * 100} · 0:00/${formatMS(song.duration)}`;
+            cache.metadata = elements.metadata.innerText;
 
             // Final updates
             set_text(song.name, `${song.artistName} · ${song.album}`);
