@@ -16,7 +16,7 @@ const launch_app = () => {
         transparent: true,
         webPreferences: {
             preload: join(import.meta.dirname, "preload.js")
-        }
+        },
     });
     window.setResizable(false);
     window.setSkipTaskbar(true);

@@ -153,3 +153,6 @@ div.progress-bar > div.light {
 .marquee > * {
     display: inline-block;
 }
+.metadata {
+    font-size:10px;
+}

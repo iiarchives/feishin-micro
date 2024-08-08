@@ -12,9 +12,10 @@ const elements = {
     toggle:   document.querySelector("#btn-toggle"),
 };
 const cache = {
-    status: null,  // Current playback status
-    last:   null,  // Last played song metadata
-    time:   null,  // Current song progress (seconds)
+    status:    null,  // Current playback status
+    last:      null,  // Last played song metadata
+    time:      null,  // Current song progress (seconds)
+    metadata:  null,  // Bottom metadata string
 };
 
 elements.cover.addEventListener("load", () => {
@@ -71,6 +72,10 @@ function set_scroll(element, text, update) {
     }
 }
 
+function formatMS(msValue) {
+    return new Date(msValue).toISOString().slice(14, -5)
+}
+
 function set_text(title, description, error) {
     if (error) {
         elements.cover.src = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
@@ -95,6 +100,8 @@ function handle_message(d) {
             visualizer.audio.currentTime = raw.data;
             cache.time = raw.data;
             document.querySelector(".progress-bar > div").style.width = `${(raw.data / duration) * 100}%`;
+            document.getElementById("metadata-label").innerText = cache.metadata.replace("0:00", formatMS(cache.time * 1000))
+            
             break;
 
         case "state":
@@ -112,6 +119,10 @@ function handle_message(d) {
             elements.cover.src = `${song.imageUrl}`.replace(/size=\d{3}/, "size=1000");
             elements.bgimage.style.background = "";
             elements.bgimage.style.backgroundImage = `url("${song.imageUrl}")`;
+
+            // Meta info
+            document.getElementById("metadata-label").innerText = `YEAR ${song.releaseYear} · ${(song.container).toUpperCase()} ${Math.round(song.bitRate / 100) * 100} · 0:00/${formatMS(song.duration)}`
+            cache.metadata = document.getElementById("metadata-label").innerText
 
             // Final updates
             set_text(song.name, `${song.artistName} · ${song.album}`);
