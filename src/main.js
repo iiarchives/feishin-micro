@@ -122,7 +122,7 @@ function handle_message(d) {
             elements.bgimage.style.backgroundImage = `url("${song.imageUrl}")`;
 
             // Meta info
-            elements.metadata.innerText = `YEAR ${song.releaseYear} · ${(song.container).toUpperCase()} ${Math.round(song.bitRate / 100) * 100} · 0:00/${formatMS(song.duration)}`;
+            elements.metadata.innerText = `YEAR ${song.releaseYear} · ${(song.container).toUpperCase().replace("AUDIO/", "")} ${Math.round(song.bitRate / 100) * 100} · 0:00/${formatMS(song.duration)}`;
             cache.metadata = elements.metadata.innerText;
 
             // Final updates
