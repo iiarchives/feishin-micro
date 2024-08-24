@@ -18,8 +18,9 @@ Note 2: The client does not have a window frame, you will need to use another wa
 
 ## Requirements
 
-- bun + nodeJS
-- (optional) iiPython Feishin (https://github.com/iiPythonx/feishin/tree/custom)
+- [Bun](https://bun.sh)
+- [Patched Feishin](https://github.com/iiarchives/feishin-micro/releases/latest) or [iiPython Feishin](https://github.com/iipythonx/feishin/tree/custom)
+    - Required in order to get working seeking and position updates.
 
 ## Development & Packaging
 
