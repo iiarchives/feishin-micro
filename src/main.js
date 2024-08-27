@@ -174,7 +174,7 @@ elements.toggle.addEventListener("click", () => socket.send(JSON.stringify({ eve
 // Handle seeking
 document.querySelector(".progress-bar").addEventListener("click", (e) => {
     socket.send(JSON.stringify({
-        event: "seek",
-        offset: ((e.offsetX / 282) * (cache.last.duration / 1000)) - cache.time
+        event: "position",
+        position: ((e.offsetX / 282) * (cache.last.duration / 1000))
     }));
 });
